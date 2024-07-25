@@ -19,7 +19,8 @@
     "react": "18.2.0",
     "react-native": "0.74.3",
     "react-native-config": "^1.5.2",
-    "react-native-dotenv": "^3.4.11"
+    "react-native-dotenv": "^3.4.11",
+    "react-native-gesture-handler": "^2.17.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"
