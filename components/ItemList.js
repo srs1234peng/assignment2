@@ -1,6 +1,6 @@
 import React from 'react';
-import { FlatList, Text, View, StyleSheet } from 'react-native';
-import { colors, spacing, typography } from '../styles';
+import { FlatList, StyleSheet } from 'react-native';
+import spacing from '../styles/spacing';
 
 const ItemsList = ({ data, renderItem }) => {
   return (

@@ -1,8 +1,10 @@
 import React, { useState } from "react";
-import { View, Text, Button, StyleSheet } from "react-native";
+import { View, Text, TextInput, StyleSheet } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import Button from "./components/Button";
-import { colors, spacing, typography } from "./styles";
+import CustomButton from "./CustomButton";
+import colors from "../styles/colors";
+import spacing from "../styles/spacing";
+import typography from "../styles/typography";
 
 const ActivityForm = ({onSubmit, initializeData = {}}) => {
     const [activity, setActivity] = useState(initializeData.activity || "");
@@ -40,7 +42,7 @@ const ActivityForm = ({onSubmit, initializeData = {}}) => {
                 value={duration}
                 onChangeText={setDuration}
             />
-            <Button title="Save" onPress={handleSave} />
+            <CustomButton title="Save" onPress={handleSave} />
         </ View>
     );
 };

@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { Pressable, Text, StyleSheet, Platform } from 'react-native';
-import { colors, spacing, typography } from '../styles';
+import colors from '../styles/colors';
+import spacing from '../styles/spacing';
+import typography from '../styles/typography';
 
-const Button = ({ onPress, title }) => {
+const CustomButton = ({ onPress, title }) => {
   const [isPressed, setIsPressed] = useState(false);
 
   return (
@@ -35,4 +37,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Button;
+export default CustomButton;

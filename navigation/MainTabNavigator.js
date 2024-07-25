@@ -1,8 +1,9 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { MaterialIcons } from '@expo/vector-icons';
-import { colors } from '../styles/colors';
+import colors from '../styles/colors';
 import Setting from '../screens/Setting';
+import Activities from '../screens/Activities';
 
 const Tab = createBottomTabNavigator();
 
@@ -15,14 +16,15 @@ const MainTabNavigator = () => {
                 tabBarStyle: { backgroundColor: colors.background },
             }}
             >
-            {/* <Tab.Screen
+            <Tab.Screen
                 name="Activities"
-                component={ActivitiesScreen}
+                component={Activities}
                 options={{
-                tabBarIcon: ({ color, size }) => <MaterialIcons name="directions-run" color={color} size={size} />,
+                tabBarIcon: ({ color, size }) => 
+                <MaterialIcons name="directions-run" color={color} size={size} />,
                 }}
             />
-            <Tab.Screen
+            {/*<Tab.Screen
                 name="Diet"
                 component={DietScreen}
                 options={{
