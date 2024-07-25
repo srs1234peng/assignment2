@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, StyleSheet, Modal, Button } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import DropDownPicker from "react-native-dropdown-picker";
 import CustomButton from "./CustomButton";
 import colors from "../styles/colors";
 import spacing from "../styles/spacing";
@@ -11,6 +12,18 @@ const ActivityForm = ({ onSubmit, initializeData = {} }) => {
   const [date, setDate] = useState(initializeData.date || new Date());
   const [duration, setDuration] = useState(initializeData.duration || 0);
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const [dropDownPicker, setDropDownPicker] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState(activity);
+  const [items, setItems] = useState([
+    { label: 'Walking', value: 'Walking' },
+    { label: 'Running', value: 'Running' },
+    { label: 'Swimming', value: 'Swimming' },
+    { label: 'Weights', value: 'Weights' },
+    { label: 'Yoga', value: 'Yoga' },
+    { label: 'Cycling', value: 'Cycling' },
+    { label: 'Hiking', value: 'Hiking' },
+  ]);
 
   const handleSave = () => {
     if (!activity || !date || !duration) {
@@ -22,11 +35,34 @@ const ActivityForm = ({ onSubmit, initializeData = {} }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.label}>Activity</Text>
-      <TextInput
+      <Text
         style={styles.input}
-        value={activity}
-        onChangeText={setActivity}
-      />
+        onPress={() => setDropDownPicker(true)}
+      >
+      {activity}
+      </Text>
+      <Modal
+        transparent={true}
+        visible={setDropDownPicker}
+        onRequestClose={() => setDropDownPicker(false)}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+          <DropDownPicker
+              open={open}
+              value={value}
+              items={items}
+              setOpen={setOpen}
+              setValue={setValue}
+              setItems={setItems}
+              onChangeValue={(item) => setActivity(item)}
+              style={styles.dropdown}
+              placeholder="Select an activity"
+            />
+            <Button title="Close" onPress={() => setDropDownPicker(false)} />
+          </View>
+        </View>
+      </Modal>
       <Text style={styles.label}>Date</Text>
       <Text
         style={styles.input}

@@ -4,6 +4,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import colors from '../styles/colors';
 import Setting from '../screens/Setting';
 import Activities from '../screens/Activities';
+import Diet from '../screens/Diet';
 
 const Tab = createBottomTabNavigator();
 
@@ -24,13 +25,13 @@ const MainTabNavigator = () => {
                 <MaterialIcons name="directions-run" color={color} size={size} />,
                 }}
             />
-            {/*<Tab.Screen
+            <Tab.Screen
                 name="Diet"
-                component={DietScreen}
+                component={Diet}
                 options={{
                 tabBarIcon: ({ color, size }) => <MaterialIcons name="restaurant" color={color} size={size} />,
                 }}
-            /> */}
+            />
             <Tab.Screen
                 name="Settings"
                 component={Setting}
