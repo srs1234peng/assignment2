@@ -7,7 +7,7 @@ const App = () => {
   return (
     <ThemeProvider>
       <NavigationContainer>
-        <RootStackNavigator />
+        <RootStackNavigator/>
       </NavigationContainer>
     </ThemeProvider>
   );
