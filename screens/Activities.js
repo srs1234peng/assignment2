@@ -1,59 +1,42 @@
-import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import ItemList from "../components/ItemList";
-import CustomButton from "../components/CustomButton";
-import colors from "../styles/colors";
-import spacing from "../styles/spacing";
-import typography from "../styles/typography";
-import { firestore } from "../firebase/firebaseConfig";
+import React from 'react';
+import { View, StyleSheet } from 'react-native';
+import ActivityForm from '../components/ActivityForm';
+import colors from '../styles/colors';
+import spacing from '../styles/spacing';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { writeToDB, updateDetails } from '../firebase/firestoreHelper'; 
 
-const Activities = () => {
-    const [activities, setActivities] = useState([]);
-    const navigation = useNavigation();
+const ActivityDetails = () => {
+  const navigation = useNavigation();
+  const route = useRoute();
+  const { initialData } = route.params || {};
 
-    useEffect(() => {
-        const fetchActivities = async () => {
-            const activitiesCollection = await firestore.collection('activities').get();
-            setActivities(activitiesCollection.docs.map(doc => ({ id: doc.id, ...doc.data() })));
-          };
-      
-          fetchActivities();
-        }, []);
+  const handleSave = async (data) => {
+    try {
+      if (initialData?.id) {
+        await updateDetails(initialData.id, 'activities', data);
+      } else {
+        await writeToDB(data, 'activities');
+      }
+      navigation.goBack();
+    } catch (error) {
+      console.error("Error saving activity: ", error);
+    }
+  };
 
-    return (
-        <View style={styles.container}>
-        <ItemList
-            data={activities}
-            renderItem={({ item }) => (
-            <View style={styles.item}>
-                <Text style={styles.itemText}>{item.activity} - {item.duration} min</Text>
-            </View>
-            )}
-        />
-        <CustomButton
-            title="Add Activity"
-            onPress={() => navigation.navigate('ActivityDetails')}
-        />
-        </View>
+  return (
+    <View style={styles.container}>
+      <ActivityForm onSubmit={handleSave} initialData={initialData} />
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      padding: spacing.medium,
-    },
-    item: {
-      padding: spacing.medium,
-      backgroundColor: colors.primary,
-      marginBottom: spacing.small,
-      borderRadius: spacing.small,
-    },
-    itemText: {
-      color: colors.textLight,
-      fontSize: typography.body,
-    },
-  });
+  container: {
+    flex: 1,
+    padding: spacing.medium,
+    backgroundColor: colors.background,
+  },
+});
 
-export default Activities;
+export default ActivityDetails;
