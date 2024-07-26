@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, TextInput, StyleSheet, Modal, Button, Alert } from "react-native";
+import Checkbox from "expo-checkbox";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import SearchableDropdown from "react-native-searchable-dropdown";
 import CustomButton from "./CustomButton";
-import colors from "../styles/colors";
-import spacing from "../styles/spacing";
-import typography from "../styles/typography";
+import { colors, spacing, typography } from "../styles/styleHelper";
 
 const ActivityForm = ({ onSubmit, initialData = {} }) => {
-  // Convert Firestore timestamp to JavaScript Date object if initialData.date exists
   const initialDate = initialData.date && initialData.date.seconds
     ? new Date(initialData.date.seconds * 1000)
     : new Date();
@@ -17,6 +15,9 @@ const ActivityForm = ({ onSubmit, initialData = {} }) => {
   const [date, setDate] = useState(initialDate);
   const [duration, setDuration] = useState(initialData.duration || 0);
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const [isSpecial, setIsSpecial] = useState(initialData.special || false);
+  const [manualOverride, setManualOverride] = useState(false);
+
   const [items] = useState([
     { id: 1, name: 'Walking' },
     { id: 2, name: 'Running' },
@@ -27,18 +28,34 @@ const ActivityForm = ({ onSubmit, initialData = {} }) => {
     { id: 7, name: 'Hiking' },
   ]);
 
+  useEffect(() => {
+    if (!manualOverride) {
+      if ((activity === 'Running' || activity === 'Weights') && duration > 60) {
+        setIsSpecial(true);
+      } else {
+        setIsSpecial(false);
+      }
+    }
+  }, [activity, duration, manualOverride]);
+
   const handleSave = () => {
-    console.log('Form values on save:', { activity, date, duration });
     if (!activity || !date || !duration) {
       Alert.alert('Error', 'Please fill out all fields');
       return;
     }
-    onSubmit({ activity, date, duration });
+    console.log('Form values on save:', { activity, date, duration, special: isSpecial });
+    onSubmit({ activity, date, duration, special: isSpecial });
   };
 
   const handleActivityChange = (item) => {
-    console.log('Selected activity:', item);
     setActivity(item.name);
+    setManualOverride(false);
+  };
+
+  const handleDurationChange = (text) => {
+    const newDuration = Number(text);
+    setDuration(newDuration);
+    setManualOverride(false);
   };
 
   return (
@@ -94,9 +111,22 @@ const ActivityForm = ({ onSubmit, initialData = {} }) => {
       <TextInput
         style={styles.input}
         value={String(duration)}
-        onChangeText={text => setDuration(Number(text))}
+        onChangeText={handleDurationChange}
         keyboardType="numeric"
       />
+      {initialData.special !== undefined && (
+        <View style={styles.checkboxContainer}>
+          <Checkbox
+            value={isSpecial}
+            onValueChange={(newValue) => {
+              setIsSpecial(newValue);
+              setManualOverride(true);
+              console.log('Checkbox value changed to:', newValue);
+            }}
+          />
+          <Text style={styles.checkboxLabel}>Mark as not special</Text>
+        </View>
+      )}
       <View style={styles.buttonContainer}>
         <CustomButton title="Save" onPress={handleSave} />
         <CustomButton title="Cancel" onPress={() => {}} /> 
@@ -151,6 +181,16 @@ const styles = StyleSheet.create({
     borderColor: colors.primary,
     borderRadius: spacing.small,
     padding: spacing.small,
+  },
+  checkboxContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: spacing.medium,
+  },
+  checkboxLabel: {
+    marginLeft: spacing.small,
+    fontSize: typography.body,
+    color: colors.text,
   },
   buttonContainer: {
     flexDirection: 'row',

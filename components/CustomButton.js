@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { Pressable, Text, StyleSheet, Platform } from 'react-native';
-import colors from '../styles/colors';
-import spacing from '../styles/spacing';
-import typography from '../styles/typography';
+import { colors, spacing, typography } from '../styles/styleHelper';
 
 const CustomButton = ({ onPress, title }) => {
   const [isPressed, setIsPressed] = useState(false);

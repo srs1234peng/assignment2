@@ -2,8 +2,7 @@ import React, { useContext } from 'react';
 import { View, StyleSheet } from 'react-native';
 import CustomButton from '../components/CustomButton';
 import { ThemeContext } from '../contexts/ThemeContext';
-import colors from '../styles/colors';
-import spacing from '../styles/spacing';
+import { colors, spacing } from '../styles/styleHelper';
 
 const Settings = () => {
   const { toggleTheme } = useContext(ThemeContext);

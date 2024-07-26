@@ -1,5 +1,5 @@
 import React, { createContext, useState } from 'react';
-import {colors as lightColors} from '../styles/colors';
+import {colors as lightColors} from '../styles/styleHelper';
 
 const darkColors = {
     ...lightColors,

@@ -4,9 +4,7 @@ import { useNavigation } from "@react-navigation/native";
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import ItemList from "../components/ItemList";
 import CustomButton from "../components/CustomButton";
-import colors from "../styles/colors";
-import spacing from "../styles/spacing";
-import typography from "../styles/typography";
+import { colors, spacing, typography } from "../styles/styleHelper";
 import { database } from '../firebase/firebaseConfig';
 import { collection, onSnapshot } from "firebase/firestore";
 

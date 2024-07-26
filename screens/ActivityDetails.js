@@ -1,8 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, Alert, Pressable } from 'react-native';
 import ActivityForm from '../components/ActivityForm';
-import colors from '../styles/colors';
-import spacing from '../styles/spacing';
+import { colors, spacing } from '../styles/styleHelper';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { updateDetails, writeToDB, deleteFromDB } from '../firebase/firestoreHelper';
 import { MaterialIcons } from '@expo/vector-icons';

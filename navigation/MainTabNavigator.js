@@ -1,7 +1,7 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { MaterialIcons } from '@expo/vector-icons';
-import colors from '../styles/colors';
+import { colors } from '../styles/styleHelper';
 import Setting from '../screens/Setting';
 import Activities from '../screens/Activities';
 import Diet from '../screens/Diet';

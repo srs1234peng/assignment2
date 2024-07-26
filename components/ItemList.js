@@ -1,6 +1,6 @@
 import React from 'react';
 import { FlatList, StyleSheet } from 'react-native';
-import spacing from '../styles/spacing';
+import { spacing } from '../styles/styleHelper';
 
 const ItemsList = ({ data, renderItem }) => {
   return (

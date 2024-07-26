@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, Modal, Button, Alert } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import colors from '../styles/colors';
-import spacing from '../styles/spacing';
-import typography from '../styles/typography';
+import { colors, spacing, typography } from '../styles/styleHelper';
 import CustomButton from './CustomButton';
 
 const DietForm = ({ onSubmit, initialData = {} }) => {
