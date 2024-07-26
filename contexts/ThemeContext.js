@@ -4,13 +4,13 @@ import { colors as lightColors } from '../styles/styleHelper';
 const darkColors = {
   ...lightColors,
   background: lightColors.backgroundDark,
-  text: lightColors.textDark,
+  text: lightColors.textLight,
 };
 
 export const ThemeContext = createContext();
 
 export const ThemeProvider = ({ children }) => {
-  const [isDarkTheme, setIsDarkTheme] = useState(false);
+  const [isDarkTheme, setIsDarkTheme] = useState(true);
 
   const toggleTheme = () => {
     setIsDarkTheme(prevTheme => !prevTheme);

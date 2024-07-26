@@ -20,7 +20,7 @@ const CustomButton = ({ onPress, title }) => {
         styles.button,
       ]}
     >
-      <Text style={[styles.text, { color: colors.textLight }]}>{title}</Text>
+      <Text style={[styles.text, { color: colors.text }]}>{title}</Text>
     </Pressable>
   );
 };
