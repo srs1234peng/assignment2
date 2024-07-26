@@ -48,7 +48,7 @@ const ActivityForm = ({ onSubmit, initialData = {} }) => {
         items={items}
         resetValue={false}
         textInputProps={{
-          placeholder: "Select an activity",
+          placeholder: activity ? activity : "Select an activity",
           underlineColorAndroid: "transparent",
           style: styles.dropdownTextInput,
         }}
@@ -73,7 +73,7 @@ const ActivityForm = ({ onSubmit, initialData = {} }) => {
             <DateTimePicker
               value={date}
               mode="date"
-              display="default"
+              display="inline"
               onChange={(event, selectedDate) => {
                 const currentDate = selectedDate || date;
                 setShowDatePicker(false);

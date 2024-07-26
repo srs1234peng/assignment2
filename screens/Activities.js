@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, Pressable } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import ItemList from "../components/ItemList";
 import CustomButton from "../components/CustomButton";
 import colors from "../styles/colors";
@@ -29,15 +30,31 @@ const Activities = () => {
     };
   }, []);
 
+  const renderItem = ({ item }) => {
+    console.log(item); // Log item data to verify its structure
+    const date = item.date ? new Date(item.date.seconds * 1000) : null;
+
+    return (
+      <Pressable key={item.id} onPress={() => navigation.navigate('ActivityDetails', { initialData: item })}>
+        <View style={styles.item}>
+          <View style={styles.itemRow}>
+            <Text style={styles.itemText}>{item.activity}</Text>
+            {item.special && (
+              <MaterialIcons name="warning" size={20} color="yellow" style={styles.icon} />
+            )}
+          </View>
+          <Text style={styles.itemText}>{date ? date.toDateString() : 'Invalid Date'}</Text>
+          <Text style={styles.itemText}>{item.duration}</Text>
+        </View>
+      </Pressable>
+    );
+  };
+
   return (
     <View style={styles.container}>
       <ItemList
         data={activities}
-        renderItem={({ item }) => (
-          <View style={styles.item}>
-            <Text style={styles.itemText}>{item.activity} - {item.duration} min</Text>
-          </View>
-        )}
+        renderItem={renderItem}
       />
       <CustomButton
         title="Add Activity"
@@ -58,9 +75,17 @@ const styles = StyleSheet.create({
     marginBottom: spacing.small,
     borderRadius: spacing.small,
   },
+  itemRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
   itemText: {
     color: colors.textLight,
     fontSize: typography.body,
+  },
+  icon: {
+    marginLeft: 10,
   },
 });
 
