@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, Button, Alert } from 'react-native';
+import { View, Text, TextInput, StyleSheet, Modal, Button, Alert } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import colors from '../styles/colors';
 import spacing from '../styles/spacing';
@@ -9,7 +9,7 @@ import CustomButton from './CustomButton';
 const DietForm = ({ onSubmit, initialData = {} }) => {
   const [description, setDescription] = useState(initialData.description || '');
   const [calories, setCalories] = useState(initialData.calories || '');
-  const [date, setDate] = useState(initialData.date || new Date());
+  const [date, setDate] = useState(initialData.date ? new Date(initialData.date.seconds * 1000) : new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
 
   const handleSave = () => {
