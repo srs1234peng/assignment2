@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, StyleSheet, Modal, Button } from "react-native";
+import { View, Text, TextInput, StyleSheet, Modal, Button, Alert } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import DropDownPicker from "react-native-dropdown-picker";
+import SearchableDropdown from "react-native-searchable-dropdown";
 import CustomButton from "./CustomButton";
 import colors from "../styles/colors";
 import spacing from "../styles/spacing";
@@ -12,48 +12,49 @@ const ActivityForm = ({ onSubmit, initialData = {} }) => {
   const [date, setDate] = useState(initialData.date || new Date());
   const [duration, setDuration] = useState(initialData.duration || 0);
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const [open, setOpen] = useState(false);
-  const [value, setValue] = useState(activity);
-  const [items, setItems] = useState([
-    { label: 'Walking', value: 'Walking' },
-    { label: 'Running', value: 'Running' },
-    { label: 'Swimming', value: 'Swimming' },
-    { label: 'Weights', value: 'Weights' },
-    { label: 'Yoga', value: 'Yoga' },
-    { label: 'Cycling', value: 'Cycling' },
-    { label: 'Hiking', value: 'Hiking' },
+  const [items] = useState([
+    { id: 1, name: 'Walking' },
+    { id: 2, name: 'Running' },
+    { id: 3, name: 'Swimming' },
+    { id: 4, name: 'Weights' },
+    { id: 5, name: 'Yoga' },
+    { id: 6, name: 'Cycling' },
+    { id: 7, name: 'Hiking' },
   ]);
 
   const handleSave = () => {
     console.log('Form values on save:', { activity, date, duration });
     if (!activity || !date || !duration) {
-      alert('Please fill out all fields');
+      Alert.alert('Error', 'Please fill out all fields');
       return;
     }
     onSubmit({ activity, date, duration });
   };
 
-  const handleActivityChange = (val) => {
-    console.log('Selected activity:', val);
-    setValue(val);
-    setActivity(val);
-    console.log('Updated activity state:', val);
+  const handleActivityChange = (item) => {
+    console.log('Selected activity:', item);
+    setActivity(item.name);
   };
 
   return (
     <View style={styles.container}>
       <Text style={styles.label}>Activity</Text>
-      <DropDownPicker
-        open={open}
-        value={value}
-        items={items}
-        setOpen={setOpen}
-        setValue={handleActivityChange}
-        setItems={setItems}
-        placeholder="Select an activity"
+      <SearchableDropdown
+        onItemSelect={handleActivityChange}
         containerStyle={styles.dropdownContainer}
-        style={styles.dropdown}
-        dropDownContainerStyle={styles.dropdownPicker}
+        itemStyle={styles.dropdownItem}
+        itemTextStyle={styles.dropdownItemText}
+        itemsContainerStyle={styles.dropdownItemsContainer}
+        items={items}
+        resetValue={false}
+        textInputProps={{
+          placeholder: "Select an activity",
+          underlineColorAndroid: "transparent",
+          style: styles.dropdownTextInput,
+        }}
+        listProps={{
+          nestedScrollEnabled: true,
+        }}
       />
       <Text style={styles.label}>Date</Text>
       <Text
@@ -125,11 +126,22 @@ const styles = StyleSheet.create({
   dropdownContainer: {
     marginBottom: spacing.medium,
   },
-  dropdown: {
-    borderColor: colors.primary,
+  dropdownItem: {
+    padding: spacing.small,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.primary,
   },
-  dropdownPicker: {
+  dropdownItemText: {
+    color: colors.text,
+  },
+  dropdownItemsContainer: {
+    maxHeight: 200,
+  },
+  dropdownTextInput: {
+    borderWidth: 1,
     borderColor: colors.primary,
+    borderRadius: spacing.small,
+    padding: spacing.small,
   },
 });
 

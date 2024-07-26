@@ -5,8 +5,7 @@ import colors from '../styles/colors';
 import spacing from '../styles/spacing';
 import { database } from '../firebase/firebaseConfig';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { updateDetails } from "../firebase/firestoreHelper";
-import { update } from 'firebase/database';
+import { updateDetails, writeToDB, deleteFromDB } from '../firebase/firestoreHelper';
 
 const ActivityDetails = () => {
   const navigation = useNavigation();
@@ -14,12 +13,16 @@ const ActivityDetails = () => {
   const { initialData } = route.params || {};
 
   const handleSave = async (data) => {
-    if (initialData?.id) {
-      await updateDetails('activities', initialData.id, data);
-    } else {
-      await updateDetails('activities', data);
+    try {
+      if (initialData?.id) {
+        await updateDetails(initialData.id, 'activity', data);
+      } else {
+        await writeToDB(data, 'activity');
+      }
+      navigation.goBack();
+    } catch (error) {
+      console.error('Error saving activity entry:', error);
     }
-    navigation(goBack);
   };
 
   return (

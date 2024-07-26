@@ -13,15 +13,14 @@ const Activities = () => {
   const [activities, setActivities] = useState([]);
   const navigation = useNavigation();
 
-
   useEffect(() => {
     const unsubscribe = onSnapshot(collection(database, "activity"), (querySnapshot) => {
       if (!querySnapshot.empty) {
-        const activities = [];
+        const activityArray = [];
         querySnapshot.forEach((doc) => {
-          activities.push({ ...doc.data(), id: doc.id });
+          activityArray.push({ ...doc.data(), id: doc.id });
         });
-        setDietEntries(activities);
+        setActivities(activityArray);
       }
     });
 
