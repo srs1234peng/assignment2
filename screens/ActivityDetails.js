@@ -12,18 +12,31 @@ const ActivityDetails = () => {
   const { initialData } = route.params || {};
 
   const handleSave = async (data) => {
-    try {
-      console.log('Saving data:', data); // Log the data being saved
+    Alert.alert(
+      'Important',
+      'Are you sure you want to save these changes?',
+      [
+        { text: 'No', onPress: () => {}, style: 'cancel' },
+        {
+          text: 'Yes',
+          onPress: async () => {
+            try {
+              console.log('Saving data:', data); // Log the data being saved
 
-      if (initialData?.id) {
-        await updateDetails(initialData.id, 'activity', data);
-      } else {
-        await writeToDB(data, 'activity');
-      }
-      navigation.goBack();
-    } catch (error) {
-      console.error('Error saving activity entry:', error);
-    }
+              if (initialData?.id) {
+                await updateDetails(initialData.id, 'activity', data);
+              } else {
+                await writeToDB(data, 'activity');
+              }
+              navigation.goBack();
+            } catch (error) {
+              console.error('Error saving activity entry:', error);
+            }
+          },
+        },
+      ],
+      { cancelable: true }
+    );
   };
 
   const handleDelete = () => {
