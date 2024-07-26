@@ -2,13 +2,13 @@ import React, { useContext } from 'react';
 import { View, StyleSheet } from 'react-native';
 import CustomButton from '../components/CustomButton';
 import { ThemeContext } from '../contexts/ThemeContext';
-import { colors, spacing } from '../styles/styleHelper';
+import { spacing } from '../styles/styleHelper';
 
 const Settings = () => {
-  const { toggleTheme } = useContext(ThemeContext);
+  const { colors, toggleTheme } = useContext(ThemeContext);
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
       <CustomButton title="Toggle Theme" onPress={toggleTheme} />
     </View>
   );
@@ -20,7 +20,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: spacing.medium,
-    backgroundColor: colors.background,
   },
 });
 

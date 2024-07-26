@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
-import { Pressable, Text, StyleSheet, Platform } from 'react-native';
-import { colors, spacing, typography } from '../styles/styleHelper';
+import React, { useState, useContext } from 'react';
+import { Pressable, Text, StyleSheet } from 'react-native';
+import { ThemeContext } from '../contexts/ThemeContext';
+import { spacing, typography } from '../styles/styleHelper';
 
 const CustomButton = ({ onPress, title }) => {
   const [isPressed, setIsPressed] = useState(false);
+  const { colors } = useContext(ThemeContext);
 
   return (
     <Pressable
@@ -18,7 +20,7 @@ const CustomButton = ({ onPress, title }) => {
         styles.button,
       ]}
     >
-      <Text style={styles.text}>{title}</Text>
+      <Text style={[styles.text, { color: colors.textLight }]}>{title}</Text>
     </Pressable>
   );
 };
@@ -30,7 +32,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   text: {
-    color: colors.textLight,
     fontSize: typography.button,
   },
 });

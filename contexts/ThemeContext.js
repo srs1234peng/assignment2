@@ -1,27 +1,30 @@
-import React, { createContext, useState } from 'react';
-import {colors as lightColors} from '../styles/styleHelper';
+import React, { createContext, useState, useMemo } from 'react';
+import { colors as lightColors } from '../styles/styleHelper';
 
 const darkColors = {
-    ...lightColors,
-    backgroundColor: '#333',
-    color: '#fff',
+  ...lightColors,
+  background: lightColors.backgroundDark,
+  text: lightColors.textDark,
 };
 
 export const ThemeContext = createContext();
 
 export const ThemeProvider = ({ children }) => {
-    const [theme, setTheme] = useState(false);
+  const [isDarkTheme, setIsDarkTheme] = useState(false);
 
-    const toggleTheme = () => {
-        setTheme((prevTheme) => !prevTheme);
-    };
+  const toggleTheme = () => {
+    setIsDarkTheme(prevTheme => !prevTheme);
+  };
 
-    return (
-        <ThemeContext.Provider 
-        value={{ 
-            theme: theme ? darkColors : lightColors, toggleTheme }}>
-            {children}
-        </ThemeContext.Provider>
-    );
+  const theme = useMemo(() => ({
+    isDarkTheme,
+    colors: isDarkTheme ? darkColors : lightColors,
+    toggleTheme,
+  }), [isDarkTheme]);
+
+  return (
+    <ThemeContext.Provider value={theme}>
+      {children}
+    </ThemeContext.Provider>
+  );
 };
-
