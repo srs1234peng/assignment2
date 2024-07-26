@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, StyleSheet, Modal, Button, Alert } from 'react-native';
+import Checkbox from "expo-checkbox";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { colors, spacing, typography } from '../styles/styleHelper';
 import CustomButton from './CustomButton';
@@ -9,6 +10,16 @@ const DietForm = ({ onSubmit, initialData = {} }) => {
   const [calories, setCalories] = useState(initialData.calories || '');
   const [date, setDate] = useState(initialData.date ? new Date(initialData.date.seconds * 1000) : new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const [isSpecial, setIsSpecial] = useState(initialData.special || false);
+  const [manualOverride, setManualOverride] = useState(false);
+
+  useEffect(() => {
+    if (!manualOverride && calories > 800) {
+      setIsSpecial(true);
+    } else if (!manualOverride) {
+      setIsSpecial(false);
+    }
+  }, [calories, manualOverride]);
 
   const handleSave = () => {
     if (!description || !calories || !date) {
@@ -19,7 +30,8 @@ const DietForm = ({ onSubmit, initialData = {} }) => {
       Alert.alert('Error', 'Calories must be a positive number');
       return;
     }
-    onSubmit({ description, calories: Number(calories), date });
+    console.log('Form values on save:', { description, calories, date, special: isSpecial });
+    onSubmit({ description, calories: Number(calories), date, special: isSpecial });
   };
 
   return (
@@ -34,7 +46,10 @@ const DietForm = ({ onSubmit, initialData = {} }) => {
       <TextInput
         style={styles.input}
         value={String(calories)}
-        onChangeText={(text) => setCalories(Number(text))}
+        onChangeText={(text) => {
+          setCalories(Number(text));
+          setManualOverride(false);
+        }}
         keyboardType="numeric"
       />
       <Text style={styles.label}>Date</Text>
@@ -52,6 +67,20 @@ const DietForm = ({ onSubmit, initialData = {} }) => {
             setDate(currentDate);
           }}
         />
+      )}
+      {initialData.special !== undefined && (
+        <View style={styles.checkboxContainer}>
+          <Checkbox
+            value={isSpecial}
+            onValueChange={(newValue) => {
+              setIsSpecial(newValue);
+              setManualOverride(true);
+              console.log('Checkbox value changed to:', newValue);
+            }}
+            color={colors.primary}
+          />
+          <Text style={styles.checkboxLabel}>Mark as special</Text>
+        </View>
       )}
       <View style={styles.buttonContainer}>
         <CustomButton title="Save" onPress={handleSave} />
@@ -76,6 +105,16 @@ const styles = StyleSheet.create({
     borderRadius: spacing.small,
     padding: spacing.small,
     marginBottom: spacing.medium,
+  },
+  checkboxContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: spacing.medium,
+  },
+  checkboxLabel: {
+    marginLeft: spacing.small,
+    fontSize: typography.body,
+    color: colors.text,
   },
   buttonContainer: {
     flexDirection: 'row',
