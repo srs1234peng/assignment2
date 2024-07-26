@@ -64,8 +64,10 @@ const DietDetails = () => {
   return (
     <View style={styles.container}>
       {initialData && (
-        <Pressable onPress={handleDelete} style={styles.deleteButton}>
-          <MaterialIcons name="delete" size={24} color={colors.primary} />
+        <Pressable onPress={()=>{
+          console.log("Delete button pressed")
+          handleDelete()}} style={styles.deleteButton}>
+          <MaterialIcons name="delete" size={28} color={colors.primary} />
         </Pressable>
       )}
       <DietForm onSubmit={handleSave} initialData={initialData} />
