@@ -12,23 +12,31 @@ const DietDetails = () => {
   const { initialData } = route.params || {};
 
   const handleSave = async (data) => {
-    try {
-      // Automatically mark as special if calories > 800
-      if (data.calories > 800) {
-        data.special = true;
-      } else {
-        data.special = false;
-      }
+    Alert.alert(
+      'Important',
+      'Are you sure you want to save these changes?',
+      [
+        { text: 'No', onPress: () => {}, style: 'cancel' },
+        {
+          text: 'Yes',
+          onPress: async () => {
+            try {
+              console.log('Saving data:', data); // Log the data being saved
 
-      if (initialData?.id) {
-        await updateDetails(initialData.id, 'diet', data);
-      } else {
-        await writeToDB(data, 'diet');
-      }
-      navigation.goBack();
-    } catch (error) {
-      console.error('Error saving diet entry:', error);
-    }
+              if (initialData?.id) {
+                await updateDetails(initialData.id, 'diet', data);
+              } else {
+                await writeToDB(data, 'diet');
+              }
+              navigation.goBack();
+            } catch (error) {
+              console.error('Error saving diet entry:', error);
+            }
+          },
+        },
+      ],
+      { cancelable: true }
+    );
   };
 
   const handleDelete = () => {
