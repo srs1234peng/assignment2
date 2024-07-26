@@ -31,9 +31,7 @@ const Activities = () => {
   }, []);
 
   const renderItem = ({ item }) => {
-    console.log(item); // Log item data to verify its structure
     const date = item.date ? new Date(item.date.seconds * 1000) : null;
-
     return (
       <Pressable key={item.id} onPress={() => navigation.navigate('ActivityDetails', { initialData: item })}>
         <View style={styles.item}>

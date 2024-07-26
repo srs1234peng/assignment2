@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, TextInput, StyleSheet, Modal, Button, Alert } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import SearchableDropdown from "react-native-searchable-dropdown";
@@ -8,8 +8,13 @@ import spacing from "../styles/spacing";
 import typography from "../styles/typography";
 
 const ActivityForm = ({ onSubmit, initialData = {} }) => {
+  // Convert Firestore timestamp to JavaScript Date object if initialData.date exists
+  const initialDate = initialData.date && initialData.date.seconds
+    ? new Date(initialData.date.seconds * 1000)
+    : new Date();
+
   const [activity, setActivity] = useState(initialData.activity || "");
-  const [date, setDate] = useState(initialData.date || new Date());
+  const [date, setDate] = useState(initialDate);
   const [duration, setDuration] = useState(initialData.duration || 0);
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [items] = useState([
@@ -51,6 +56,7 @@ const ActivityForm = ({ onSubmit, initialData = {} }) => {
           placeholder: activity ? activity : "Select an activity",
           underlineColorAndroid: "transparent",
           style: styles.dropdownTextInput,
+          value: activity,
         }}
         listProps={{
           nestedScrollEnabled: true,
@@ -91,7 +97,10 @@ const ActivityForm = ({ onSubmit, initialData = {} }) => {
         onChangeText={text => setDuration(Number(text))}
         keyboardType="numeric"
       />
-      <CustomButton title="Save" onPress={handleSave} />
+      <View style={styles.buttonContainer}>
+        <CustomButton title="Save" onPress={handleSave} />
+        <CustomButton title="Cancel" onPress={() => {}} /> 
+      </View>
     </View>
   );
 };
@@ -142,6 +151,10 @@ const styles = StyleSheet.create({
     borderColor: colors.primary,
     borderRadius: spacing.small,
     padding: spacing.small,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
 });
 
