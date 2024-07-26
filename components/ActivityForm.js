@@ -30,7 +30,7 @@ const ActivityForm = ({ onSubmit, initialData = {} }) => {
 
   useEffect(() => {
     if (!manualOverride) {
-      if ((activity === 'Running' || activity === 'Weights') && duration > 60) {
+      if (duration > 60) {
         setIsSpecial(true);
       } else {
         setIsSpecial(false);
@@ -123,13 +123,14 @@ const ActivityForm = ({ onSubmit, initialData = {} }) => {
               setManualOverride(true);
               console.log('Checkbox value changed to:', newValue);
             }}
+            color={colors.primary}
           />
-          <Text style={styles.checkboxLabel}>Mark as not special</Text>
+          <Text style={styles.checkboxLabel}>Select this item if you agree that it is special.</Text>
         </View>
       )}
       <View style={styles.buttonContainer}>
         <CustomButton title="Save" onPress={handleSave} />
-        <CustomButton title="Cancel" onPress={() => {}} /> 
+        <CustomButton title="Cancel" onPress={() => {}} />
       </View>
     </View>
   );

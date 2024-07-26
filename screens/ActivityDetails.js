@@ -12,14 +12,9 @@ const ActivityDetails = () => {
   const { initialData } = route.params || {};
 
   const handleSave = async (data) => {
-    
     try {
-      // Automatically mark as special if calories > 800
-      if (data.duration > 60) {
-        data.special = true;
-      } else {
-        data.special = false;
-      }
+      console.log('Saving data:', data); // Log the data being saved
+
       if (initialData?.id) {
         await updateDetails(initialData.id, 'activity', data);
       } else {
