@@ -24,3 +24,15 @@ export async function updateDetails(docId, collectionName, data) {
         console.error(err);
     }
 }
+
+export async function readAllDocs(collectionName){
+    try {
+        const querySnapshot = await getDocs(collection(database, collectionName));
+        let newArray = [];
+        querySnapshot.forEach((doc) => {
+            newArray.push(doc.data());
+        });}
+        catch(err){
+            console.error(err);
+        }
+}

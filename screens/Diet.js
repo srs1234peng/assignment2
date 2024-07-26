@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { MaterialIcons } from '@expo/vector-icons';
 import ItemList from '../components/ItemList';
 import CustomButton from '../components/CustomButton';
 import colors from '../styles/colors';
@@ -34,8 +35,15 @@ const Diet = () => {
       <ItemList
         data={dietEntries}
         renderItem={({ item }) => (
-          <View style={styles.item}>
-            <Text style={styles.itemText}>{item.description} - {item.calories} calories</Text>
+          <View key={item.id} style={styles.item}>
+            <View style={styles.itemRow}>
+              <Text style={styles.itemText}>{item.description}</Text>
+              {item.special && (
+                <MaterialIcons name="warning" size={20} color="yellow" style={styles.icon} />
+              )}
+            </View>
+            <Text style={styles.itemDate}>{new Date(item.date.seconds * 1000).toDateString()}</Text>
+            <Text style={styles.itemCalories}>{item.calories}</Text>
           </View>
         )}
       />

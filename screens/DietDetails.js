@@ -4,7 +4,7 @@ import DietForm from '../components/DietForm';
 import colors from '../styles/colors';
 import spacing from '../styles/spacing';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { writeToDB, updateDetails } from '../firebase/firestoreHelper';
+import { updateDetails, writeToDB } from '../firebase/firestoreHelper';
 
 const DietDetails = () => {
   const navigation = useNavigation();
@@ -13,6 +13,13 @@ const DietDetails = () => {
 
   const handleSave = async (data) => {
     try {
+      // Automatically mark as special if calories > 800
+      if (data.calories > 800) {
+        data.special = true;
+      } else {
+        data.special = false;
+      }
+
       if (initialData?.id) {
         await updateDetails('diet', initialData.id, data);
       } else {
