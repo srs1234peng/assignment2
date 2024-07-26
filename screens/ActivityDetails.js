@@ -3,8 +3,10 @@ import { View, StyleSheet } from 'react-native';
 import ActivityForm from '../components/ActivityForm';
 import colors from '../styles/colors';
 import spacing from '../styles/spacing';
-import { firestore } from '../firebase/firebaseConfig';
+import { database } from '../firebase/firebaseConfig';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import { updateDetails } from "../firebase/firestoreHelper";
+import { update } from 'firebase/database';
 
 const ActivityDetails = () => {
   const navigation = useNavigation();
@@ -13,11 +15,11 @@ const ActivityDetails = () => {
 
   const handleSave = async (data) => {
     if (initialData?.id) {
-      await firestore.collection('activities').doc(initialData.id).update(data);
+      await updateDetails('activities', initialData.id, data);
     } else {
-      await firestore.collection('activities').add(data);
+      await updateDetails('activities', data);
     }
-    navigation.goBack();
+    navigation(goBack);
   };
 
   return (

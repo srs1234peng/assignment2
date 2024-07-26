@@ -1,32 +1,49 @@
-import React from 'react';
-import { View, StyleSheet } from 'react-native';
-import ActivityForm from '../components/ActivityForm';
-import colors from '../styles/colors';
-import spacing from '../styles/spacing';
-import { useNavigation, useRoute } from '@react-navigation/native';
-import { writeToDB, updateDetails } from '../firebase/firestoreHelper'; 
+import React, { useEffect, useState } from "react";
+import { View, Text, StyleSheet } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import ItemList from "../components/ItemList";
+import CustomButton from "../components/CustomButton";
+import colors from "../styles/colors";
+import spacing from "../styles/spacing";
+import typography from "../styles/typography";
+import { database } from '../firebase/firebaseConfig';
+import { collection, onSnapshot } from "firebase/firestore";
 
-const ActivityDetails = () => {
+const Activities = () => {
+  const [activities, setActivities] = useState([]);
   const navigation = useNavigation();
-  const route = useRoute();
-  const { initialData } = route.params || {};
 
-  const handleSave = async (data) => {
-    try {
-      if (initialData?.id) {
-        await updateDetails(initialData.id, 'activities', data);
-      } else {
-        await writeToDB(data, 'activities');
+
+  useEffect(() => {
+    const unsubscribe = onSnapshot(collection(database, "activity"), (querySnapshot) => {
+      if (!querySnapshot.empty) {
+        const activities = [];
+        querySnapshot.forEach((doc) => {
+          activities.push({ ...doc.data(), id: doc.id });
+        });
+        setDietEntries(activities);
       }
-      navigation.goBack();
-    } catch (error) {
-      console.error("Error saving activity: ", error);
-    }
-  };
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, []);
 
   return (
     <View style={styles.container}>
-      <ActivityForm onSubmit={handleSave} initialData={initialData} />
+      <ItemList
+        data={activities}
+        renderItem={({ item }) => (
+          <View style={styles.item}>
+            <Text style={styles.itemText}>{item.activity} - {item.duration} min</Text>
+          </View>
+        )}
+      />
+      <CustomButton
+        title="Add Activity"
+        onPress={() => navigation.navigate('ActivityDetails')}
+      />
     </View>
   );
 };
@@ -35,8 +52,17 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: spacing.medium,
-    backgroundColor: colors.background,
+  },
+  item: {
+    padding: spacing.medium,
+    backgroundColor: colors.primary,
+    marginBottom: spacing.small,
+    borderRadius: spacing.small,
+  },
+  itemText: {
+    color: colors.textLight,
+    fontSize: typography.body,
   },
 });
 
-export default ActivityDetails;
+export default Activities;

@@ -7,12 +7,11 @@ import colors from "../styles/colors";
 import spacing from "../styles/spacing";
 import typography from "../styles/typography";
 
-const ActivityForm = ({ onSubmit, initializeData = {} }) => {
-  const [activity, setActivity] = useState(initializeData.activity || "");
-  const [date, setDate] = useState(initializeData.date || new Date());
-  const [duration, setDuration] = useState(initializeData.duration || 0);
+const ActivityForm = ({ onSubmit, initialData = {} }) => {
+  const [activity, setActivity] = useState(initialData.activity || "");
+  const [date, setDate] = useState(initialData.date || new Date());
+  const [duration, setDuration] = useState(initialData.duration || 0);
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const [dropDownPicker, setDropDownPicker] = useState(false);
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(activity);
   const [items, setItems] = useState([
@@ -26,43 +25,36 @@ const ActivityForm = ({ onSubmit, initializeData = {} }) => {
   ]);
 
   const handleSave = () => {
+    console.log('Form values on save:', { activity, date, duration });
     if (!activity || !date || !duration) {
+      alert('Please fill out all fields');
       return;
     }
     onSubmit({ activity, date, duration });
   };
 
+  const handleActivityChange = (val) => {
+    console.log('Selected activity:', val);
+    setValue(val);
+    setActivity(val);
+    console.log('Updated activity state:', val);
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.label}>Activity</Text>
-      <Text
-        style={styles.input}
-        onPress={() => setDropDownPicker(true)}
-      >
-      {activity}
-      </Text>
-      <Modal
-        transparent={true}
-        visible={setDropDownPicker}
-        onRequestClose={() => setDropDownPicker(false)}
-      >
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-          <DropDownPicker
-              open={open}
-              value={value}
-              items={items}
-              setOpen={setOpen}
-              setValue={setValue}
-              setItems={setItems}
-              onChangeValue={(item) => setActivity(item)}
-              style={styles.dropdown}
-              placeholder="Select an activity"
-            />
-            <Button title="Close" onPress={() => setDropDownPicker(false)} />
-          </View>
-        </View>
-      </Modal>
+      <DropDownPicker
+        open={open}
+        value={value}
+        items={items}
+        setOpen={setOpen}
+        setValue={handleActivityChange}
+        setItems={setItems}
+        placeholder="Select an activity"
+        containerStyle={styles.dropdownContainer}
+        style={styles.dropdown}
+        dropDownContainerStyle={styles.dropdownPicker}
+      />
       <Text style={styles.label}>Date</Text>
       <Text
         style={styles.input}
@@ -129,6 +121,15 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     padding: spacing.medium,
     borderRadius: spacing.small,
+  },
+  dropdownContainer: {
+    marginBottom: spacing.medium,
+  },
+  dropdown: {
+    borderColor: colors.primary,
+  },
+  dropdownPicker: {
+    borderColor: colors.primary,
   },
 });
 

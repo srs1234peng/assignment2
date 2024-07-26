@@ -3,8 +3,8 @@ import { View, StyleSheet } from 'react-native';
 import DietForm from '../components/DietForm';
 import colors from '../styles/colors';
 import spacing from '../styles/spacing';
-import { firestore } from '../firebase/firebaseConfig';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import { writeToDB, updateDetails } from '../firebase/firestoreHelper';
 
 const DietDetails = () => {
   const navigation = useNavigation();
@@ -12,12 +12,16 @@ const DietDetails = () => {
   const { initialData } = route.params || {};
 
   const handleSave = async (data) => {
-    if (initialData?.id) {
-      await firestore.collection('diet').doc(initialData.id).update(data);
-    } else {
-      await firestore.collection('diet').add(data);
+    try {
+      if (initialData?.id) {
+        await updateDetails('diet', initialData.id, data);
+      } else {
+        await writeToDB(data, 'diet');
+      }
+      navigation.goBack();
+    } catch (error) {
+      console.error('Error saving diet entry:', error);
     }
-    navigation.goBack();
   };
 
   return (

@@ -6,19 +6,27 @@ import CustomButton from '../components/CustomButton';
 import colors from '../styles/colors';
 import spacing from '../styles/spacing';
 import typography from '../styles/typography';
-import { firestore } from '../firebase/firebaseConfig';
+import { database } from '../firebase/firebaseConfig';
+import { collection, onSnapshot } from "firebase/firestore";
 
 const Diet = () => {
   const [dietEntries, setDietEntries] = useState([]);
   const navigation = useNavigation();
 
   useEffect(() => {
-    const fetchDietEntries = async () => {
-      const dietCollection = await firestore.collection('diet').get();
-      setDietEntries(dietCollection.docs.map(doc => ({ id: doc.id, ...doc.data() })));
-    };
+    const unsubscribe = onSnapshot(collection(database, "diet"), (querySnapshot) => {
+      if (!querySnapshot.empty) {
+        const dietArray = [];
+        querySnapshot.forEach((doc) => {
+          dietArray.push({ ...doc.data(), id: doc.id });
+        });
+        setDietEntries(dietArray);
+      }
+    });
 
-    fetchDietEntries();
+    return () => {
+      unsubscribe();
+    };
   }, []);
 
   return (
