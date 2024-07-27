@@ -5,6 +5,7 @@ import { colors, spacing } from '../styles/styleHelper';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { updateDetails, writeToDB, deleteFromDB } from '../firebase/firestoreHelper';
 import { MaterialIcons } from '@expo/vector-icons';
+import { Platform } from 'react-native';
 
 const ActivityDetails = () => {
   const navigation = useNavigation();
@@ -65,7 +66,6 @@ const ActivityDetails = () => {
     <View style={styles.container}>
       {initialData && (
         <Pressable onPress={()=>{
-          console.log("Delete button pressed")
           handleDelete()
         }} style={styles.deleteButton}>
           <MaterialIcons name="delete" size={28} color={colors.primary} />
@@ -86,6 +86,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: spacing.medium,
     right: spacing.medium,
+    zIndex: Platform.OS === 'ios' ? 10 : undefined,
   },
 });
 
